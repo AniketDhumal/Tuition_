@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - Bright Learning Path</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/resources.css">
+</head>
+
+<body class="resources-page">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Bright Learning Path</a>
+            <div class="d-flex align-items-center">
+                <div class="toggle-container">
+                    <i class="fas fa-sun toggle-icon sun" id="sun-icon"></i>
+                    <i class="fas fa-moon toggle-icon moon d-none" id="moon-icon"></i>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="enroll.html">Enroll Now</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="resources.html">Resources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-resources text-center text-light">
+        <div class="container">
+            <h1 class="display-4">Educational Resources</h1>
+            <p class="lead">Explore and share learning materials to support your educational journey</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+        <!-- Resource Filter Section -->
+        <section class="mb-5">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" id="resourceSearch" placeholder="Search resources...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="resourceType">
+                        <option value="">All Types</option>
+                        <option value="ebook">E-books</option>
+                        <option value="worksheet">Worksheets</option>
+                        <option value="video">Videos</option>
+                        <option value="presentation">Presentations</option>
+                        <option value="audio">Audio</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="resourceGrade">
+                        <option value="">All Grades</option>
+                        <option value="1">Grade 1</option>
+                        <option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option>
+                        <option value="4">Grade 4</option>
+                        <option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option>
+                        <option value="7">Grade 7</option>
+                        <option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option>
+                        <option value="10">Grade 10</option>
+                        <option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="resourceSubject">
+                        <option value="">All Subjects</option>
+                        <option value="math">Math</option>
+                        <option value="science">Science</option>
+                        <option value="english">English</option>
+                        <option value="history">History</option>
+                        <option value="art">Art</option>
+                        <option value="music">Music</option>
+                        <option value="geography">Geography</option>
+                        <option value="physics">Physics</option>
+                        <option value="chemistry">Chemistry</option>
+                        <option value="biology">Biology</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="resourceSort">
+                        <option value="">Sort By</option>
+                        <option value="createdAt:desc">Newest First</option>
+                        <option value="createdAt:asc">Oldest First</option>
+                        <option value="downloadCount:desc">Most Downloads</option>
+                        <option value="averageRating:desc">Highest Rated</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary w-100" id="filterResources">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resource Guide Section -->
+        <section class="resource-guide mb-5">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="bi bi-info-circle"></i> Resource Submission Guide</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-3 text-primary">
+                                    <i class="bi bi-1-circle-fill" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Select Files</h5>
+                                    <p class="text-muted">Choose files up to 50MB in size. Supported formats include PDFs, documents, images, audio, and video.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-3 text-primary">
+                                    <i class="bi bi-2-circle-fill" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Add Details</h5>
+                                    <p class="text-muted">Provide a clear title, description, and categorize your resource for better discoverability.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-3 text-primary">
+                                    <i class="bi bi-3-circle-fill" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Submit & Share</h5>
+                                    <p class="text-muted">After approval, your resource will be available to the community. Track status in "My Resources".</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Display Section -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Learning Resources</h2>
+                <button class="btn btn-outline-primary" id="toggleUploadSection">
+                    <i class="bi bi-upload"></i> Upload Resources
+                </button>
+            </div>
+            
+            <div class="alert alert-info" id="pendingResourcesAlert" style="display: none;">
+                <i class="bi bi-info-circle-fill"></i> You have <span id="pendingCount">0</span> resources pending approval. 
+                Only you and administrators can see them until they're approved.
+            </div>
+            
+            <div class="row g-4" id="resourcesContainer">
+                <!-- Resources will be loaded here -->
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading resources...</p>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <nav aria-label="Resource pagination" class="mt-4">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Pagination will be added dynamically -->
+                </ul>
+            </nav>
+        </section>
+
+        <!-- Resource Upload Section (Initially hidden) -->
+        <section class="card mb-5" id="uploadSection" style="display: none;">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="bi bi-cloud-upload"></i> Upload Resources</h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-4" id="uploadTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#singleUpload" type="button" role="tab">
+                            Single Upload
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="batch-tab" data-bs-toggle="tab" data-bs-target="#batchUpload" type="button" role="tab">
+                            Batch Upload
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="uploadTabsContent">
+                    <!-- Single Upload Tab -->
+                    <div class="tab-pane fade show active" id="singleUpload" role="tabpanel">
+                        <form id="singleUploadForm">
+                            <div class="mb-4">
+                                <label for="singleResourceFile" class="form-label">Select File</label>
+                                <div class="file-upload-container">
+                                    <input class="form-control" type="file" id="singleResourceFile" required
+                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.mp3,.mp4,.mov,.avi">
+                                    <div class="file-upload-preview mt-2" id="singleFilePreview"></div>
+                                </div>
+                                <div class="form-text">Max file size: 50MB. Allowed formats: PDF, Documents, Images, Audio, Video</div>
+                            </div>
+                            
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="resourceTitle" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="resourceTitle" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="resourceTypeSelect" class="form-label">Resource Type</label>
+                                    <select class="form-select" id="resourceTypeSelect" required>
+                                        <option value="">Select Type</option>
+                                        <option value="ebook">E-book</option>
+                                        <option value="worksheet">Worksheet</option>
+                                        <option value="video">Video</option>
+                                        <option value="presentation">Presentation</option>
+                                        <option value="audio">Audio</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="resourceDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="resourceDescription" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label for="resourceGradeSelect" class="form-label">Grade Level (Optional)</label>
+                                    <select class="form-select" id="resourceGradeSelect">
+                                        <option value="">Select Grade</option>
+                                        <option value="1">Grade 1</option>
+                                        <option value="2">Grade 2</option>
+                                        <option value="3">Grade 3</option>
+                                        <option value="4">Grade 4</option>
+                                        <option value="5">Grade 5</option>
+                                        <option value="6">Grade 6</option>
+                                        <option value="7">Grade 7</option>
+                                        <option value="8">Grade 8</option>
+                                        <option value="9">Grade 9</option>
+                                        <option value="10">Grade 10</option>
+                                        <option value="11">Grade 11</option>
+                                        <option value="12">Grade 12</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="resourceSubjectSelect" class="form-label">Subject (Optional)</label>
+                                    <select class="form-select" id="resourceSubjectSelect">
+                                        <option value="">Select Subject</option>
+                                        <option value="math">Math</option>
+                                        <option value="science">Science</option>
+                                        <option value="english">English</option>
+                                        <option value="history">History</option>
+                                        <option value="art">Art</option>
+                                        <option value="music">Music</option>
+                                        <option value="geography">Geography</option>
+                                        <option value="physics">Physics</option>
+                                        <option value="chemistry">Chemistry</option>
+                                        <option value="biology">Biology</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="resourceTags" class="form-label">Tags (Optional)</label>
+                                    <input type="text" class="form-control" id="resourceTags" placeholder="Comma separated tags">
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" id="singleUploadBtn">
+                                    <span class="upload-text">Upload Resource</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Batch Upload Tab -->
+                    <div class="tab-pane fade" id="batchUpload" role="tabpanel">
+                        <form id="batchUploadForm">
+                            <div class="mb-4">
+                                <label for="resourceFiles" class="form-label">Select Multiple Files</label>
+                                <div class="file-upload-container">
+                                    <input class="form-control" type="file" id="resourceFiles" multiple required
+                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.mp3,.mp4,.mov,.avi">
+                                    <div class="file-upload-preview mt-2" id="batchFilesPreview"></div>
+                                </div>
+                                <div class="form-text">Max 10 files at once. Max file size: 50MB each.</div>
+                            </div>
+                            
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label for="defaultType" class="form-label">Default Resource Type</label>
+                                    <select class="form-select" id="defaultType">
+                                        <option value="">Select Type</option>
+                                        <option value="ebook">E-book</option>
+                                        <option value="worksheet">Worksheet</option>
+                                        <option value="video">Video</option>
+                                        <option value="presentation">Presentation</option>
+                                        <option value="audio">Audio</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="defaultGrade" class="form-label">Default Grade Level (Optional)</label>
+                                    <select class="form-select" id="defaultGrade">
+                                        <option value="">Select Grade</option>
+                                        <option value="1">Grade 1</option>
+                                        <option value="2">Grade 2</option>
+                                        <option value="3">Grade 3</option>
+                                        <option value="4">Grade 4</option>
+                                        <option value="5">Grade 5</option>
+                                        <option value="6">Grade 6</option>
+                                        <option value="7">Grade 7</option>
+                                        <option value="8">Grade 8</option>
+                                        <option value="9">Grade 9</option>
+                                        <option value="10">Grade 10</option>
+                                        <option value="11">Grade 11</option>
+                                        <option value="12">Grade 12</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="defaultSubject" class="form-label">Default Subject (Optional)</label>
+                                    <select class="form-select" id="defaultSubject">
+                                        <option value="">Select Subject</option>
+                                        <option value="math">Math</option>
+                                        <option value="science">Science</option>
+                                        <option value="english">English</option>
+                                        <option value="history">History</option>
+                                        <option value="art">Art</option>
+                                        <option value="music">Music</option>
+                                        <option value="geography">Geography</option>
+                                        <option value="physics">Physics</option>
+                                        <option value="chemistry">Chemistry</option>
+                                        <option value="biology">Biology</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="defaultDescription" class="form-label">Default Description</label>
+                                <textarea class="form-control" id="defaultDescription" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="defaultTags" class="form-label">Default Tags (Optional)</label>
+                                <input type="text" class="form-control" id="defaultTags" placeholder="Comma separated tags">
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" id="batchUploadBtn">
+                                    <span class="upload-text">Upload Resources</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Upload Progress -->
+                <div class="mt-4" id="uploadProgress" style="display: none;">
+                    <div class="progress mb-3">
+                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <div id="fileStatus" class="small"></div>
+                    <div id="uploadErrors" class="mt-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Resources Section (For logged-in users) -->
+        <section class="mb-5" id="myResourcesSection" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">My Resources</h2>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary active" data-status="all">All</button>
+                    <button type="button" class="btn btn-outline-secondary" data-status="pending">Pending</button>
+                    <button type="button" class="btn btn-outline-secondary" data-status="approved">Approved</button>
+                    <button type="button" class="btn btn-outline-secondary" data-status="rejected">Rejected</button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover" id="myResourcesTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Upload Date</th>
+                            <th>Downloads</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- My resources will be loaded here -->
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-3">Loading your resources...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination for my resources -->
+            <nav aria-label="My resources pagination" class="mt-4">
+                <ul class="pagination justify-content-center" id="myResourcesPagination">
+                    <!-- Pagination will be added dynamically -->
+                </ul>
+            </nav>
+        </section>
+    </main>
+
+    <!-- Resource Preview Modal -->
+    <div class="modal fade" id="resourcePreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resourcePreviewTitle">Resource Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="resourcePreviewContent">
+                    <!-- Preview content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" id="downloadResourceBtn" target="_blank">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal fade" id="ratingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Rate This Resource</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="ratingForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="ratingResourceId">
+                        <div class="rating-stars text-center mb-3">
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+                                <label class="btn btn-outline-warning" for="rating1"><i class="bi bi-star-fill"></i></label>
+                                
+                                <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+                                <label class="btn btn-outline-warning" for="rating2"><i class="bi bi-star-fill"></i></label>
+                                
+                                <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+                                <label class="btn btn-outline-warning" for="rating3"><i class="bi bi-star-fill"></i></label>
+                                
+                                <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off">
+                                <label class="btn btn-outline-warning" for="rating4"><i class="bi bi-star-fill"></i></label>
+                                
+                                <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off">
+                                <label class="btn btn-outline-warning" for="rating5"><i class="bi bi-star-fill"></i></label>
+                            </div>
+                        </div>
+                        <p class="text-center text-muted">Select your rating (1-5 stars)</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteResourceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this resource? This action cannot be undone.</p>
+                    <p class="fw-bold" id="resourceToDeleteTitle"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete Resource</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Bright Learning Path</h5>
+                    <p>Empowering students and educators with quality learning resources.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-decoration-none">Home</a></li>
+                        <li><a href="courses.html" class="text-decoration-none">Courses</a></li>
+                        <li><a href="resources.html" class="text-decoration-none">Resources</a></li>
+                        <li><a href="about.html" class="text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Connect</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none"><i class="bi bi-envelope"></i> Contact Us</a></li>
+                        <li><a href="#" class="text-decoration-none"><i class="bi bi-facebook"></i> Facebook</a></li>
+                        <li><a href="#" class="text-decoration-none"><i class="bi bi-twitter"></i> Twitter</a></li>
+                        <li><a href="#" class="text-decoration-none"><i class="bi bi-linkedin"></i> LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 Bright Learning Path. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/resources.js"></script>
+</body>
+
+</html>

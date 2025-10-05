@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Resources</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/dashboards.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Dashboard</h3>
+            </div>
+            <ul class="menu-list">
+                <li><a href="../template/admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="active"><a href="./manage-resources.html"><i class="fas fa-file-alt"></i> Manage Resources</a></li>
+                <li><a href="./manage-courses.html"><i class="fas fa-book-open"></i> Manage Courses</a></li>
+                <li><a href="./manage-results.html"><i class="fas fa-graduation-cap"></i> Manage Results</a></li>
+                <li><a href="./index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <header>
+                <div class="welcome">
+                    <h1>Manage Resources</h1>
+                </div>
+                <div id="theme-toggle" class="theme-toggle">
+                    <i id="sun-icon" class="fas fa-sun"></i>
+                    <i id="moon-icon" class="fas fa-moon d-none"></i>
+                </div>
+            </header>
+
+            <div class="resource-management">
+                <div id="alert-container"></div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" id="resource-search" class="form-control" placeholder="Search resources...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" id="search-btn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button class="btn btn-success" id="add-resource-btn">
+                            <i class="fas fa-plus"></i> Add Resource
+                        </button>
+                    </div>
+                </div>
+
+                <div id="resource-form-container" class="card mb-4" style="display: none;">
+                    <div class="card-header">
+                        <h4 id="form-title">Add New Resource</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="resource-form">
+                            <input type="hidden" id="resource-id">
+                            <div class="form-group">
+                                <label for="resource-title">Title *</label>
+                                <input type="text" class="form-control" id="resource-title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="resource-description">Description *</label>
+                                <textarea class="form-control" id="resource-description" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="resource-course">Course *</label>
+                                <select class="form-control" id="resource-course" required>
+                                    <option value="">Select Course</option>
+                                    <option value="">Mathematics</option>
+                                    <option value="">science</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="resource-type">Type *</label>
+                                <select class="form-control" id="resource-type" required>
+                                    <option value="">Select Type</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="video">Video</option>
+                                    <option value="link">External Link</option>
+                                    <option value="document">Document</option>
+                                    <option value="presentation">Presentation</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="file-upload-group">
+                                <label for="resource-file">File *</label>
+                                <input type="file" class="form-control-file" id="resource-file">
+                                <small class="form-text text-muted">Max file size: 10MB</small>
+                            </div>
+                            <div class="form-group" id="external-link-group" style="display: none;">
+                                <label for="resource-link">External Link *</label>
+                                <input type="url" class="form-control" id="resource-link" placeholder="https://example.com">
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submit-btn">
+                                <span id="submit-text">Save Resource</span>
+                                <span id="submit-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" class="btn btn-secondary ml-2" id="cancel-btn">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Course</th>
+                                <th>Type</th>
+                                <th>Downloads</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resources-table-body">
+                            <!-- Resources will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <nav aria-label="Resource pagination">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Pagination will be loaded here -->
+                    </ul>
+                </nav>
+            </div>
+        </main>
+    </div>
+
+    <!-- Resource Preview Modal -->
+    <div class="modal fade" id="resourcePreviewModal" tabindex="-1" role="dialog" aria-labelledby="resourcePreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resourcePreviewModalLabel">Resource Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="resource-preview-content">
+                    <!-- Preview content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="#" class="btn btn-primary" id="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/resource-management.js"></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+/* Default Light Mode Styles */
+body {
+    background-color: #f8f9fa;
+    color: #343a40;
+    font-family: Arial, sans-serif;
+}
+
+/* Dark Mode Styles */
+.dark-mode body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .hero {
+    background-image: linear-gradient(135deg, #004d40 30%, #003f3f 100%);
+    color: #e0e0e0;
+}
+
+.dark-mode .hero h1, .dark-mode .hero p {
+    color: #e0e0e0;
+}
+
+.dark-mode .carousel-caption h5, .dark-mode .carousel-caption p {
+    background: rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.dark-mode .card img {
+    border-bottom: 2px solid #004d40;
+}
+
+.dark-mode .card-title {
+    color: #e0e0e0;
+}
+
+.dark-mode .card-text {
+    color: #b0b0b0;
+}
+
+.dark-mode .footer {
+    background-color: #004d40;
+    border-top: 1px solid #003d34;
+}
+
+.dark-mode .footer p {
+    color: #e0e0e0;
+}
+
+.dark-mode .footer a {
+    color: #e0e0e0;
+}
+
+.dark-mode .footer a:hover {
+    background-color: #003d34;
+}
+
+.dark-mode .contact-us {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-top: 1px solid #333;
+}
+
+.dark-mode .contact-us h2 {
+    color: #e0e0e0;
+}
+
+.dark-mode .contact-us p {
+    color: #e0e0e0;
+}
+
+.dark-mode .contact-us .contact-details {
+    color: #e0e0e0;
+}
+
+.dark-mode .contact-us .contact-info {
+    color: #00bcd4;
+}
+
+.dark-mode .contact-us .contact-info:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* General Styles */
+.hero {
+    background-image: linear-gradient(135deg, #007bff 30%, #00c6ff 100%);
+    color: white;
+    padding: 120px 0;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    animation: fadeInUp 1.2s ease-out;
+}
+
+.carousel-item img {
+    height: 400px;
+    object-fit: cover;
+}
+
+.carousel-caption h5 {
+    font-size: 2rem;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+
+.carousel-caption p {
+    font-size: 1.2rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+
+.container {
+    max-width: 1200px; /* Adjusts the max width of the container */
+    margin: auto; /* Centers the container */
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 100%; /* Ensures all cards are the same height */
+}
+
+.card img {
+    border-bottom: 2px solid #007bff;
+    width: 100%; /* Ensures the image fits the card */
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column; /* Allows the title and text to stack vertically */
+    height: 100%; /* Ensures card body fills the card */
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0; /* Removes default margin */
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+    flex-grow: 1; /* Allows the text to expand and push other elements */
+}
+
+.row {
+    margin: 0; /* Removes default margin from row */
+}
+
+.col-md-4 {
+    padding: 15px; /* Adds spacing between columns */
+}
+
+.footer {
+    background-color: #007bff;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #0056b3;
+}
+
+.footer p {
+    margin: 0;
+    color: #ffffff;
+}
+
+.footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.footer a:hover {
+    background-color: #a56c2c;
+    color: #ffffff;
+}
+
+/* Contact Us Section Styles */
+.contact-us {
+    background-color: hsl(0, 0%, 96%);
+    padding: 60px 0;
+    text-align: center;
+    font-family: 'Georgia', serif;
+    border-top: 1px solid #ddd;
+}
+
+.contact-us .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.contact-us h2 {
+    font-size: 2.5rem;
+    color: #7e5f5f;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+.contact-us p {
+    color: #121010;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+.contact-us .intro {
+    font-size: 1.125rem;
+    color: #010000;
+    margin-bottom: 30px;
+}
+
+.contact-us .contact-details {
+    font-size: 1.125rem;
+    color: #5f4343;
+}
+
+.contact-us .contact-details p {
+    margin: 10px 0;
+}
+
+.contact-us .contact-info {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contact-us .contact-info:hover {
+    text-decoration: underline;
+}

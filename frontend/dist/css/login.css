@@ -1,0 +1,103 @@
+/* Light Mode Background */
+body {
+    background-image: linear-gradient(135deg, #FFCCBC, #FFAB40);
+    color: #333; /* General text color */
+}
+
+/* Login Page Styles */
+section {
+    padding: 80px 0;
+}
+
+section h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #1c1a18; /* Darker tone for elegance */
+}
+
+/* Form Styles */
+form {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent for blending */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin: 0 auto;
+    transition: background-color 0.3s;
+}
+
+form .form-label {
+    font-weight: 600;
+}
+
+form .form-control {
+    border-radius: 5px;
+    height: 45px;
+}
+
+form .btn {
+    background-color: #FF6F61; /* Coral */
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+    width: 100%;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form .btn:hover {
+    background-color: #FF3D4D; /* Darker coral */
+    transform: translateY(-2px);
+}
+
+form p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: linear-gradient(135deg, #4B79A1 30%, #283E51 70%); /* Galaxy dream gradient */
+    color: #ffffff;
+}
+
+body.dark-mode .navbar,
+body.dark-mode .footer {
+    background-color: #3A4E69; /* Darker teal */
+}
+
+body.dark-mode form {
+    background-color: rgba(40, 62, 81, 0.9); /* Semi-transparent for blending */
+}
+
+body.dark-mode .btn {
+    background-color: #5B7585; /* Light teal */
+}
+
+/* Dark Mode Toggle Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-icon {
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+/* Footer */
+footer {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem;
+}

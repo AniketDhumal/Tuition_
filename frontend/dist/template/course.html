@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/course.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Tuition Dashboard</h3>
+            </div>
+            <ul class="menu-list">
+                <li><a href="../template/dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="./course.html"><i class="fas fa-book-open"></i> Courses</a></li>
+                <li><a href="./profile.html"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="./student.html"><i class="fas fa-graduation-cap"></i> Result</a></li>
+                <li><a href="./index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <header>
+                <div class="welcome">
+                    <h1>Course Details</h1>
+                </div>
+                <div id="theme-toggle" class="theme-toggle">
+                    <i id="sun-icon" class="fas fa-sun"></i>
+                    <i id="moon-icon" class="fas fa-moon d-none"></i>
+                </div>
+            </header>
+
+            <section class="course-list">
+                <h2>Available Courses</h2>
+                <div class="course-cards row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Mathematics</h5>
+                                <p class="card-text">Explore the fascinating world of numbers, equations, and problem-solving.</p>
+                                <a href="#" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Science</h5>
+                                <p class="card-text">Delve into scientific principles, experiments, and discoveries across various fields.</p>
+                                <a href="#" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">English</h5>
+                                <p class="card-text">Enhance your language skills with comprehensive lessons on literature and grammar.</p>
+                                <a href="#" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="course-resources">
+                <h2>Additional Resources</h2>
+                <div class="resource-list row">
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h4>Mathematics Resources</h4>
+                            <ul>
+                                <li><a href="#">Interactive Algebra Tutorials</a></li>
+                                <li><a href="#">Geometry Practice Exercises</a></li>
+                                <li><a href="#">Calculus Study Guides</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="resource-card">
+                            <h4>Science Resources</h4>
+                            <ul>
+                                <li><a href="#">Physics Simulation Tools</a></li>
+                                <li><a href="#">Chemistry Experiment Videos</a></li>
+                                <li><a href="#">Biology Study Materials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="course-updates">
+                <h2>Recent Updates</h2>
+                <div class="update-list">
+                    <div class="update-item">
+                        <h5>New Math Worksheets Available</h5>
+                        <p>New worksheets for Algebra and Geometry have been added to the course resources.</p>
+                    </div>
+                    <div class="update-item">
+                        <h5>Science Project Deadline Extended</h5>
+                        <p>The deadline for the Science Project has been extended to October 5, 2024.</p>
+                    </div>
+                    <div class="update-item">
+                        <h5>English Essay Guidelines Updated</h5>
+                        <p>Updated guidelines for the English essay are now available in the course materials section.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Floating Action Button -->
+            <div class="fab" id="fab">
+                <i class="fas fa-bars"></i>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../js/dashboard.js"></script>
+   <script src="../js/course.js"></script>
+</body>
+</html>

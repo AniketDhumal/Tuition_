@@ -1,0 +1,320 @@
+/* Default Light Mode Styles */
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+header, .hero {
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* General Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212; /* Very dark gray */
+    color: #e0e0e0; /* Light gray */
+}
+
+body.dark-mode .navbar,
+body.dark-mode .footer {
+    background-color: #1f1f1f; /* Slightly lighter dark gray */
+    color: #e0e0e0;
+    border-bottom: 1px solid #333;
+}
+
+body.dark-mode a {
+    color: #bb86fc; /* Light purple */
+}
+
+body.dark-mode a:hover {
+    color: #3700b3; /* Darker purple */
+}
+
+body.dark-mode .btn {
+    background-color: #444; /* Medium gray */
+    color: #e0e0e0;
+    border: 1px solid #666;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #555; /* Slightly lighter gray */
+}
+
+body.dark-mode .card {
+    background-color: #2c2c2c; /* Dark gray */
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+body.dark-mode .form-control {
+    background-color: #333; /* Dark gray */
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #999; /* Light gray */
+}
+
+/* Classic Look for Dark Mode */
+body.dark-mode .hero {
+    background: linear-gradient(135deg, #4e4e4e, #1c1c1c); /* Classic gradient */
+    color: #ffffff;
+}
+
+body.dark-mode .hero h1, 
+body.dark-mode .hero p {
+    color: #ffffff;
+}
+
+body.dark-mode .section-header {
+    color: #ffffff;
+    border-bottom: 2px solid #bb86fc; /* Classic purple accent */
+}
+
+body.dark-mode .card {
+    border-radius: 8px;
+}
+
+body.dark-mode .footer p {
+    margin: 0;
+}
+
+body.dark-mode .footer a {
+    color: #bb86fc;
+}
+
+/* Navbar Styling */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 15px;
+    color: #333;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007bff;
+}
+.toggle-icon.sun {
+    color: #ffcc00; /* Sun icon color */
+}
+.toggle-icon.moon {
+    color: #272222; /* Moon icon color in dark mode */
+}
+
+/* Hero Section */
+.hero {
+    background-image: linear-gradient(135deg, #007bff 30%, #00c6ff 100%);
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero .btn {
+    padding: 12px 40px;
+    font-size: 1.25rem;
+    background-color: #ffc107;
+    border: none;
+}
+
+.hero .btn:hover {
+    background-color: #e0a800;
+}
+
+/* Form Styling */
+form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+form .form-label {
+    font-weight: 600;
+}
+
+form .form-control {
+    border-radius: 5px;
+    height: 45px;
+}
+
+form .btn {
+    background-color: #007bff;
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+form .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Courses and About Section */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card-body {
+    text-align: center;
+    padding: 20px;
+}
+
+.card h5 {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer a {
+    color: #ffc107;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #e0a800;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero .btn {
+        font-size: 1rem;
+        padding: 10px 30px;
+    }
+
+    form {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero .btn {
+        font-size: 0.9rem;
+        padding: 8px 25px;
+    }
+}
+/* Base light mode styles */
+body {
+    color-scheme: light;
+    transition: background-color 0.3s ease;
+    overflow-x: hidden;
+}
+
+body.light-mode {
+    background-color: #ffffff;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #121212;
+    color-scheme: dark;
+}
+
+/* Hero section styles */
+.hero-enroll {
+    background-image: url('../images/hero-light.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 120px 0;
+    text-align: center;
+}
+
+body.dark-mode .hero-enroll {
+    background-image: url('../images/hero-dark.jpg');
+    transition: background-image 0.5s ease-in-out;
+}
+
+/* Theme toggle button styling */
+#theme-toggle {
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #ff5722;
+}
+
+/* Theme transition animation */
+body.theme-transition::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300%;
+    height: 300%;
+    background-color: #000;
+    z-index: 9999;
+    transform: translate(-100%, -100%);
+    border-radius: 50%;
+    animation: diagonal-wipe 8s ease forwards;
+    pointer-events: none;
+}
+
+/* Animation keyframes: diagonal wipe from top-left to bottom-right */
+@keyframes diagonal-wipe {
+    0% {
+        transform: translate(-100%, -100%) scale(0);
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+/* Optional dark mode transition for images */
+body.dark-mode img {
+    filter: brightness(0.8);
+}
+

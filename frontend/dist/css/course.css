@@ -1,0 +1,218 @@
+body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    background-color: #f0f0f0;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container-fluid {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-left: 1px solid #ccc;
+    overflow-y: auto;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+header .welcome h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+    color: #222;
+    text-align: center; /* Center the header */
+    flex: 1; /* Allow the header to take full width */
+}
+
+header #theme-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+header #theme-toggle i {
+    font-size: 28px;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+/* Course Overview Section */
+.course-overview {
+    margin-bottom: 30px;
+    text-align: center; /* Center all overview text */
+}
+
+.course-overview h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Course Cards Styles */
+.course-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the cards */
+}
+
+.course-cards .card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: box-shadow 0.3s, border-color 0.3s;
+    flex: 1 1 calc(33.333% - 20px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    text-align: center; /* Center text in the card */
+}
+
+.course-cards .card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border-color: #0056b3;
+    transform: translateY(-5px);
+}
+
+.course-cards .card h5 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Resource and Update Sections */
+.resource-card,
+.update-item {
+    background: linear-gradient(145deg, #ffffff, #f4f4f4);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.resource-card:hover,
+.update-item:hover {
+    transform: scale(1.02);
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .main-content {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-left: 1px solid #333;
+}
+
+body.dark-mode header {
+    background-color: #272525;
+    border-bottom: 1px solid #333;
+}
+
+body.dark-mode header .welcome h1 {
+    color: #ffffff;
+}
+
+body.dark-mode .course-overview h2,
+body.dark-mode .card-text {
+    color: #ffffff; /* Increased visibility for headings */
+    background: linear-gradient(145deg, #333, #1e1e1e);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .course-cards .card {
+        flex: 1 1 100%;
+    }
+}
+
+/* Additional Styling for Classy Look */
+.resource-card h4,
+.update-item h5 {
+    color: #5881ac; /* Classy color for headings */
+}
+
+body.dark-mode .resource-card,
+body.dark-mode .update-item {
+    background: #333;
+    color: #ffffff; /* Increased visibility in dark mode */
+    border: 1px solid #444; /* Darker border for better contrast */
+}
+
+body.dark-mode .resource-card h4,
+body.dark-mode .update-item h5 {
+    color: #66ccff; /* Classy heading color in dark mode */
+}
+
+/* Course Resources and Updates */
+.course-list h5 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0056b3; /* Blue color for light mode */
+    border-bottom: 2px solid #0056b3;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: color 0.3s; /* Smooth transition for color change */
+}
+
+body.dark-mode .course-list h5 {
+    color: #ffffff; /* White color for dark mode */
+    border-bottom: 2px solid #66ccff; /* Light blue border for dark mode */
+    background: linear-gradient(145deg, #333, #1e1e1e);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+h2{
+    text-align: center;
+}
+/* Text Alignment for Course Resources */
+.course-resources h4{
+    text-align: center;
+}
+
+.course-updates h5 {
+    text-align: left; /* Left-align h4 and h5 for resources */
+}
+
+.card p{
+    color: black;
+}
