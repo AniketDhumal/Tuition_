@@ -54,7 +54,7 @@ app.use('/uploads', express.static(uploadDir));
 // Configure CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5000'];
+  : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5000',`https://tuition-ho83-git-main-aniket-dhumals-projects-146bfaa0.vercel.app`];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -228,4 +228,5 @@ process.on('SIGTERM', () => {
   server.close(() => {
     console.log('Process terminated');
   });
+
 });
