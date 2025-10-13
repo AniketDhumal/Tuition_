@@ -1,287 +1,264 @@
+const path = require('path');
+const fs = require('fs');
+const slugify = require('slugify');
+const mongoose = require('mongoose');
+
 const Resource = require('../models/Resource');
 const Course = require('../models/Course');
-const mongoose = require('mongoose');
+let Enrollment;
+try { Enrollment = require('../models/Enrollment'); } catch (e) {}
+const User = require('../models/User');
+
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
-const { uploadFile, deleteFile } = require('../services/fileService');
 
-// File upload middleware
-exports.uploadResourceFile = uploadFile.single('resourceFile');
+const formatFileSize = (bytes) => {
+  if (!bytes && bytes !== 0) return 'N/A';
+  if (bytes < 1024) return `${bytes} bytes`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+};
 
-// Get all resources with pagination and search
-exports.getResource = catchAsync(async (req, res, next) => {
-    // Validate ID format first
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return next(new AppError('Invalid resource ID format', 400));
-    }
-
-    const resource = await Resource.findById(req.params.id)
-        .populate({
-            path: 'course',
-            select: 'name code',
-            options: { lean: true }  // Add lean() to prevent document issues
-        })
-        .populate({
-            path: 'createdBy',
-            select: 'name',
-            options: { lean: true }
-        })
-        .lean();  // Convert to plain JavaScript object
-
-    if (!resource) {
-        return next(new AppError('Resource not found', 404));
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: { resource }
+async function checkResourceAccess(user, resource) {
+  if (!user) return false;
+  if (user.role === 'admin' || user.role === 'teacher') return true;
+  const courseId = resource.course && typeof resource.course === 'object' ? resource.course._id : resource.course;
+  if (!courseId) return false;
+  if (resource.course && Array.isArray(resource.course.instructors)) {
+    if (resource.course.instructors.some((i) => String(i) === String(user._id))) return true;
+  }
+  if (Enrollment) {
+    const enrolled = await Enrollment.exists({
+      user: user._id,
+      course: courseId,
+      status: { $in: ['active', 'completed'] }
     });
-});
+    if (enrolled) return true;
+  }
+  return false;
+}
 
 exports.getAllResources = catchAsync(async (req, res, next) => {
-    const { page = 1, limit = 10, search } = req.query;
-    
-    // Build query
-    const query = {};
-    if (search) {
-        query.$or = [
-            { title: { $regex: search, $options: 'i' } },
-            { description: { $regex: search, $options: 'i' } }
-        ];
-    }
-    
-    // Execute query with pagination
-    const resources = await Resource.find(query)
-        .populate('course', 'name code')
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .sort({ createdAt: -1 });
-    
-    const total = await Resource.countDocuments(query);
-    
-    res.status(200).json({
-        status: 'success',
-        results: resources.length,
-        total,
-        totalPages: Math.ceil(total / limit),
-        currentPage: page,
-        data: { resources }
-    });
-});
-
-exports.createResource = catchAsync(async (req, res, next) => {
-    if (!req.file && !req.body.fileUrl) {
-        return next(new AppError('Please upload a file or provide a file URL', 400));
-    }
-
-    const resourceData = {
-        title: req.body.title,
-        description: req.body.description,
-        course: req.body.courseId,
-        type: req.body.type,
-        createdBy: req.user.id
-    };
-
-    if (req.file) {
-        resourceData.fileUrl = req.file.path;
-        resourceData.fileSize = req.file.size;
-        resourceData.fileType = req.file.mimetype;
-    } else {
-        resourceData.fileUrl = req.body.fileUrl;
-    }
-
-    const resource = await Resource.create(resourceData);
-    await Course.findByIdAndUpdate(req.body.courseId, { $inc: { resourceCount: 1 } });
-
-    res.status(201).json({
-        status: 'success',
-        data: { resource }
-    });
-});
-
-exports.updateResource = catchAsync(async (req, res, next) => {
-    // 1. Find the resource and verify ownership
-    const resource = await Resource.findOne({
-      _id: req.params.id,
-      $or: [
-        { createdBy: req.user.id },
-        { 'course.instructors': req.user.id }
-      ]
-    });
-  
-    if (!resource) {
-      return next(new AppError('Resource not found or unauthorized', 404));
-    }
-  
-    // 2. Prepare update data
-    const updateData = {
-      title: req.body.title || resource.title,
-      description: req.body.description || resource.description,
-      course: req.body.courseId || resource.course,
-      type: req.body.type || resource.type
-    };
-  
-    // 3. Handle file updates
-    if (req.file) {
-      if (resource.fileUrl) await deleteFile(resource.fileUrl).catch(console.error);
-      updateData.fileUrl = req.file.path;
-      updateData.fileSize = req.file.size;
-      updateData.fileType = req.file.mimetype;
-    }
-  
-    // 4. Perform the update
-    const updatedResource = await Resource.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    ).populate('course', 'name code');
-  
-    res.status(200).json({
-      status: 'success',
-      data: { resource: updatedResource }
-    });
-  });
-
-  exports.downloadResource = catchAsync(async (req, res, next) => {
-    // 1. Find the resource
-    const resource = await Resource.findById(req.params.id)
-      .populate('course', 'instructors');
-    
-    if (!resource) {
-      return next(new AppError('Resource not found', 404));
-    }
-  
-    // 2. Verify access (enrolled or instructor)
-    const hasAccess = await checkResourceAccess(req.user.id, resource);
-    if (!hasAccess) {
-      return next(new AppError('Not authorized to access this resource', 401));
-    }
-  
-    // 3. Track download and serve file
-    await Resource.findByIdAndUpdate(req.params.id, {
-      $inc: { downloadCount: 1 }
-    });
-  
-    if (resource.type === 'link') {
-      return res.redirect(resource.fileUrl);
-    }
-  
-    // For file downloads
-    const filePath = path.join(__dirname, `../${resource.fileUrl}`);
-    
-    res.download(filePath, `${slugify(resource.title)}${path.extname(filePath)}`, (err) => {
-      if (err) {
-        console.error('Download failed:', err);
-        return next(new AppError('File could not be downloaded', 500));
-      }
-    });
-  });
-  
-  // Helper function to check access
-  async function checkResourceAccess(userId, resource) {
-    // Admins can access everything
-    if (req.user.role === 'admin') return true;
-  
-    // Check if user is instructor for the course
-    if (resource.course.instructors.includes(userId)) return true;
-  
-    // Check if user is enrolled
-    return await Enrollment.exists({
-      user: userId,
-      course: resource.course._id,
-      status: { $in: ['completed', 'active'] }
-    });
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const limit = Math.max(1, parseInt(req.query.limit, 10) || 10);
+  const skip = (page - 1) * limit;
+  const search = req.query.search ? String(req.query.search).trim() : null;
+  const filter = {};
+  if (search) {
+    filter.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } }
+    ];
   }
-
-exports.deleteResource = catchAsync(async (req, res, next) => {
-    const resource = await Resource.findByIdAndDelete(req.params.id);
-    if (!resource) return next(new AppError('No resource found with that ID', 404));
-
-    if (resource.fileUrl && resource.fileUrl.startsWith('uploads/')) {
-        await deleteFile(resource.fileUrl);
+  if (req.query.courseId) {
+    if (mongoose.Types.ObjectId.isValid(req.query.courseId)) {
+      filter.course = req.query.courseId;
     }
+  }
+  const [total, docs] = await Promise.all([
+    Resource.countDocuments(filter),
+    Resource.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('course', 'name code')
+      .lean()
+  ]);
+  const totalPages = Math.ceil(total / limit) || 1;
+  res.status(200).json({
+    status: 'success',
+    pagination: { page, limit, total, totalPages },
+    data: { resources: docs }
+  });
+});
 
-    await Course.findByIdAndUpdate(resource.course, { $inc: { resourceCount: -1 } });
-
-    res.status(204).json({
-        status: 'success',
-        data: null
-    });
+exports.getResource = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) return next(new AppError('Invalid resource id', 400));
+  const resource = await Resource.findById(id)
+    .populate('course', 'name code description instructors')
+    .populate('createdBy', 'name email role')
+    .lean();
+  if (!resource) return next(new AppError('Resource not found', 404));
+  res.status(200).json({ status: 'success', data: resource });
 });
 
 exports.viewResource = catchAsync(async (req, res, next) => {
-    // Validate ID format first
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return next(new AppError('Invalid resource ID format', 400));
-    }
-
-    const resource = await Resource.findById(req.params.id)
-        .populate({
-            path: 'course',
-            select: 'name code description instructor',
-            options: { lean: true }
-        })
-        .populate({
-            path: 'createdBy',
-            select: 'name email role',
-            options: { lean: true }
-        })
-        .lean();
-
-    if (!resource) {
-        return next(new AppError('Resource not found', 404));
-    }
-
-    // Get related resources
-    const relatedResources = await Resource.find({
-        course: resource.course._id,
-        _id: { $ne: resource._id }
-    })
-    .sort('-createdAt')
-    .limit(5)
-    .select('title type downloadCount createdAt')
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) return next(new AppError('Invalid resource id', 400));
+  const resource = await Resource.findById(id)
+    .populate({ path: 'course', select: 'name code instructors description' })
+    .populate({ path: 'createdBy', select: 'name email role' })
     .lean();
-
-    const response = {
-        resource: {
-            id: resource._id,
-            title: resource.title,
-            description: resource.description,
-            type: resource.type,
-            fileUrl: resource.fileUrl,
-            fileSize: formatFileSize(resource.fileSize),
-            createdAt: resource.createdAt,
-            downloadCount: resource.downloadCount
-        },
-        course: resource.course,
-        uploadedBy: resource.createdBy,
-        relatedResources,
-        permissions: {
-            canEdit: req.user.role === 'admin' || req.user.role === 'teacher' || req.user._id.equals(resource.createdBy._id),
-            canDelete: req.user.role === 'admin' || req.user.role === 'teacher'
-        }
-    };
-
-    res.status(200).json({
-        status: 'success',
-        data: response
-    });
+  if (!resource) return next(new AppError('Resource not found', 404));
+  const canEdit = req.user && (req.user.role === 'admin' || req.user.role === 'teacher' || (resource.createdBy && String(resource.createdBy._id) === String(req.user._id)));
+  const canDelete = req.user && (req.user.role === 'admin' || req.user.role === 'teacher');
+  let relatedResources = [];
+  if (resource.course && resource.course._id) {
+    relatedResources = await Resource.find({ course: resource.course._id, _id: { $ne: resource._id } })
+      .sort('-createdAt')
+      .limit(6)
+      .select('title type downloadCount createdAt')
+      .lean();
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      resource: {
+        id: resource._id,
+        title: resource.title,
+        description: resource.description,
+        type: resource.type,
+        fileUrl: resource.fileUrl,
+        fileSize: formatFileSize(resource.fileSize),
+        createdAt: resource.createdAt,
+        downloadCount: resource.downloadCount
+      },
+      course: resource.course || null,
+      uploadedBy: resource.createdBy || null,
+      relatedResources,
+      permissions: { canEdit, canDelete }
+    }
+  });
 });
 
-// Helper functions
-const formatFileSize = (bytes) => {
-    if (!bytes) return 'N/A';
-    if (bytes < 1024) return `${bytes} bytes`;
-    if (bytes < 1048576) return `${(bytes / 1024).toFixed(2)} KB`;
-    return `${(bytes / 1048576).toFixed(2)} MB`;
-};
+exports.downloadResource = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
 
-const getRelatedResources = async (courseId, excludeResourceId) => {
-    return await Resource.find({ 
-        course: courseId,
-        _id: { $ne: excludeResourceId }
-    })
-    .sort('-createdAt')
-    .limit(5)
-    .select('title type downloadCount createdAt');
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return next(new AppError('Invalid resource id', 400));
+  }
+
+  // load resource (no access checks so downloads are public)
+  const resource = await Resource.findById(id).lean();
+  if (!resource) return next(new AppError('Resource not found', 404));
+
+  
+  // if it's an external link, redirect to it
+  if (resource.type === 'link' || /^https?:\/\//i.test(String(resource.fileUrl))) {
+    if (!resource.fileUrl) return next(new AppError('No external URL for this resource', 404));
+    return res.redirect(resource.fileUrl);
+  }
+
+  // otherwise treat fileUrl as a local file path
+  let filePath = resource.fileUrl;
+  if (!filePath) return next(new AppError('No file associated with this resource', 404));
+
+  if (!path.isAbsolute(filePath)) {
+    filePath = path.resolve(process.cwd(), filePath);
+  }
+
+  if (!fs.existsSync(filePath)) {
+    console.error('Download failed — file not found:', filePath);
+    return next(new AppError('File not found on server', 404));
+  }
+
+  const ext = path.extname(filePath) || '';
+  const safeName = slugify(resource.title || 'resource', { lower: true, strict: true });
+  const downloadName = `${safeName}${ext}`;
+
+  return res.download(filePath, downloadName, (err) => {
+    if (err) {
+      console.error('res.download error:', err);
+      if (!res.headersSent) return next(new AppError('Failed to download file', 500));
+    }
+  });
+});
+
+
+exports.createResource = catchAsync(async (req, res, next) => {
+  const { title, description, courseId, type, fileUrl } = req.body;
+  if (!title || !description || !courseId || !type) {
+    return next(new AppError('Missing required fields: title, description, courseId, type', 400));
+  }
+  if (!mongoose.Types.ObjectId.isValid(courseId)) return next(new AppError('Invalid course id', 400));
+  const course = await Course.findById(courseId);
+  if (!course) return next(new AppError('Course not found', 404));
+  const doc = {
+    title,
+    description,
+    course: courseId,
+    type,
+    createdBy: req.user ? req.user._id : undefined
+  };
+  if (req.file && req.file.path) {
+    doc.fileUrl = req.file.path || (req.file.destination ? path.join(req.file.destination, req.file.filename) : undefined);
+    if (req.file.size) doc.fileSize = req.file.size;
+  } else if (type === 'link' && fileUrl) {
+    doc.fileUrl = fileUrl;
+  } else if (type !== 'link') {
+    return next(new AppError('Please upload a file for this resource type', 400));
+  }
+  const created = await Resource.create(doc);
+  res.status(201).json({ status: 'success', data: created });
+});
+
+exports.updateResource = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) return next(new AppError('Invalid resource id', 400));
+  const resource = await Resource.findById(id);
+  if (!resource) return next(new AppError('Resource not found', 404));
+  if (!(req.user && (req.user.role === 'admin' || req.user.role === 'teacher' || String(resource.createdBy) === String(req.user._id)))) {
+    return next(new AppError('Not authorized to update this resource', 403));
+  }
+  const { title, description, courseId, type, fileUrl } = req.body;
+  if (title) resource.title = title;
+  if (description) resource.description = description;
+  if (courseId && mongoose.Types.ObjectId.isValid(courseId)) resource.course = courseId;
+  if (type) resource.type = type;
+  if (req.file && req.file.path) {
+    if (resource.fileUrl && !/^https?:\/\//i.test(String(resource.fileUrl))) {
+      try {
+        const oldPath = path.isAbsolute(resource.fileUrl) ? resource.fileUrl : path.resolve(process.cwd(), resource.fileUrl);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      } catch (e) {
+        console.warn('Failed to remove old resource file:', e.message || e);
+      }
+    }
+    resource.fileUrl = req.file.path || (req.file.destination ? path.join(req.file.destination, req.file.filename) : resource.fileUrl);
+    if (req.file.size) resource.fileSize = req.file.size;
+  } else if (type === 'link' && fileUrl) {
+    resource.fileUrl = fileUrl;
+    resource.fileSize = undefined;
+  }
+  await resource.save();
+  res.status(200).json({ status: 'success', data: resource });
+});
+
+exports.deleteResource = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) return next(new AppError('Invalid resource id', 400));
+  const resource = await Resource.findById(id);
+  if (!resource) return next(new AppError('Resource not found', 404));
+  if (!(req.user && (req.user.role === 'admin' || req.user.role === 'teacher' || String(resource.createdBy) === String(req.user._id)))) {
+    return next(new AppError('Not authorized to delete this resource', 403));
+  }
+  if (resource.fileUrl && !/^https?:\/\//i.test(String(resource.fileUrl))) {
+    try {
+      const filePath = path.isAbsolute(resource.fileUrl) ? resource.fileUrl : path.resolve(process.cwd(), resource.fileUrl);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    } catch (err) {
+      console.warn('Failed to remove resource file during delete:', err.message || err);
+    }
+  }
+  await Resource.findByIdAndDelete(id);
+  res.status(200).json({ status: 'success', data: null });
+});
+
+exports.trackDownload = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) return next(new AppError('Invalid resource id', 400));
+  await Resource.findByIdAndUpdate(id, { $inc: { downloadCount: 1 } }).catch(() => {});
+  return res.status(200).json({ status: 'success', message: 'download tracked' });
+});
+
+module.exports = {
+  getAllResources: exports.getAllResources,
+  getResource: exports.getResource,
+  viewResource: exports.viewResource,
+  downloadResource: exports.downloadResource,
+  createResource: exports.createResource,
+  updateResource: exports.updateResource,
+  deleteResource: exports.deleteResource,
+  trackDownload: exports.trackDownload
 };

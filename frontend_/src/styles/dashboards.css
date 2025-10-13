@@ -250,6 +250,7 @@ header {
     background-color: rgba(255, 255, 255, 0.08);
 }
 
+
 /* Form Styles */
 .form-control {
     display: block;
@@ -257,7 +258,7 @@ header {
     padding: 10px 15px;
     font-size: 14px;
     line-height: 1.5;
-    color: var(--text-primary);
+    color:black;
     background-color: var(--card-bg);
     background-clip: padding-box;
     border: 1px solid var(--border-color);

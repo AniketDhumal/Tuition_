@@ -1,0 +1,392 @@
+/* manage_result.css — Styled to match manage_course look & theme
+   Uses: html[data-theme="light" | "dark"] (Navbar toggle controls theme)
+   Replace your existing manage_result.css with this file.
+*/
+
+/* ---------- Theme variables (in sync with manage_course.css) ---------- */
+:root,
+html[data-theme="light"] {
+  --mc-bg: linear-gradient(180deg, #f8fafc 0%, #f1f5fb 100%);
+  --mc-surface: #ffffff;
+  --mc-card: rgba(255,255,255,0.92);
+  --mc-muted: #6b7280;
+  --mc-border: #e2e8f0;
+  --mc-accent: #2563eb;
+  --mc-accent-2: #60a5fa;
+  --mc-success: #16a34a;
+  --mc-danger: #ef4444;
+  --mc-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --mc-soft-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+  --mc-glass: rgba(255,255,255,0.7);
+  --mc-text: #0f172a;
+  --mc-muted-2: #94a3b8;
+  --mc-focus: rgba(37,99,235,0.15);
+  --mc-ease: cubic-bezier(.25,.9,.25,1);
+  --mc-radius: 12px;
+}
+
+html[data-theme="dark"] {
+  --mc-bg: linear-gradient(180deg, #0f172a, #1e293b);
+  --mc-surface: #1e293b;
+  --mc-card: rgba(255,255,255,0.04);
+  --mc-muted: #94a3b8;
+  --mc-border: rgba(255,255,255,0.06);
+  --mc-accent: #60a5fa;
+  --mc-accent-2: #93c5fd;
+  --mc-success: #34d399;
+  --mc-danger: #f87171;
+  --mc-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  --mc-soft-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  --mc-glass: rgba(255,255,255,0.06);
+  --mc-text: #e2e8f0;
+  --mc-muted-2: #94a3b8;
+  --mc-focus: rgba(96,165,250,0.15);
+  --mc-radius: 12px;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--mc-bg);
+  color: var(--mc-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background .25s var(--mc-ease), color .25s var(--mc-ease);
+}
+
+/* Page wrapper */
+.result-page {
+  padding: 28px;
+  min-height: 100vh;
+  transition: background .25s var(--mc-ease), color .25s var(--mc-ease);
+}
+
+/* Header / title and actions (matches manage_course header style) */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.result-page h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--mc-text);
+}
+
+/* actions on the right */
+.page-header .actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Filters row — match manage_course search block */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* Form card (search/import/add card) */
+.form-card, .card.form-card {
+  background: var(--mc-card);
+  border-radius: calc(var(--mc-radius));
+  padding: 16px;
+  box-shadow: var(--mc-soft-shadow);
+  border: 1px solid var(--mc-border);
+  transition: transform .12s var(--mc-ease), box-shadow .12s var(--mc-ease), background .18s var(--mc-ease);
+}
+.form-card:hover { transform: translateY(-2px); box-shadow: var(--mc-shadow); }
+
+/* controls inside card */
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.form-row .form-control,
+.filters select,
+.filters input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--mc-border);
+  background: linear-gradient(180deg, var(--mc-surface), var(--mc-glass));
+  color: var(--mc-text);
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow .18s var(--mc-ease), border .18s var(--mc-ease);
+}
+.form-row .form-control::placeholder,
+.filters input::placeholder { color: var(--mc-muted-2); }
+.form-row .form-control:focus,
+.filters select:focus,
+.filters input:focus {
+  box-shadow: 0 8px 20px var(--mc-focus);
+  border-color: var(--mc-focus);
+}
+
+/* ---------- Table wrapper (card) ---------- */
+.result-table {
+  margin-top: 20px;
+  border-radius: var(--mc-radius);
+  overflow: hidden;
+  box-shadow: var(--mc-shadow);
+  background: var(--mc-card);
+  border: 1px solid var(--mc-border);
+  transition: box-shadow .18s var(--mc-ease), transform .18s var(--mc-ease), background .18s var(--mc-ease);
+}
+
+/* full width table */
+.result-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  color: var(--mc-text);
+}
+
+/* table head (match manage_course table heading style) */
+.result-table thead th {
+  padding: 16px 18px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--mc-muted);
+  border-bottom: 1px solid var(--mc-border);
+  background: transparent;
+}
+
+/* table body */
+.result-table tbody td {
+  padding: 16px 18px;
+  vertical-align: middle;
+  color: var(--mc-text);
+  border-bottom: 1px solid var(--mc-border);
+  transition: background .12s var(--mc-ease), transform .12s var(--mc-ease);
+}
+
+/* subtle striping and hover */
+.result-table tbody tr:nth-child(odd) td {
+  background: linear-gradient(180deg, rgba(0,0,0,0.00), rgba(0,0,0,0.01));
+}
+.result-table tbody tr:hover td {
+  background: linear-gradient(90deg, rgba(99,102,241,0.06), rgba(59,130,246,0.04));
+  transform: translateY(-1px);
+}
+
+/* empty state row */
+.result-table tbody .no-data {
+  text-align: center;
+  padding: 28px;
+  color: var(--mc-muted);
+}
+
+/* ---------- Action buttons (primary / success / warning / danger) ---------- */
+.btn {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--mc-border);
+  background: transparent;
+  color: var(--mc-text);
+  font-weight: 600;
+  transition: transform .12s var(--mc-ease), box-shadow .12s var(--mc-ease);
+}
+
+/* primary */
+.btn-primary {
+  background: linear-gradient(90deg, var(--mc-accent), var(--mc-accent-2));
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.14);
+}
+.btn-primary:hover { transform: translateY(-2px); }
+
+/* success */
+.btn-success {
+  background: linear-gradient(90deg, #22c55e, var(--mc-success));
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 20px rgba(22,163,74,0.12);
+}
+.btn-success:hover { transform: translateY(-2px); }
+
+/* warning */
+.btn-warning {
+  background: linear-gradient(90deg, #facc15, #eab308);
+  color: #111;
+  border: none;
+  box-shadow: 0 8px 20px rgba(250,204,21,0.12);
+}
+.btn-warning:hover { transform: translateY(-2px); }
+
+/* danger */
+.btn-danger {
+  background: linear-gradient(90deg, var(--mc-danger), #f87171);
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 20px rgba(239,68,68,0.12);
+}
+.btn-danger:hover { transform: translateY(-2px); }
+
+/* ghost / secondary */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--mc-border);
+  color: var(--mc-text);
+}
+.btn-ghost:hover {
+  background: rgba(37,99,235,0.04);
+}
+
+/* action icons used in table actions (small) */
+.table-action {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  border:1px solid var(--mc-border);
+  background: var(--mc-surface);
+  color: var(--mc-text);
+  box-shadow: var(--mc-soft-shadow);
+  cursor:pointer;
+  transition: transform .12s var(--mc-ease), box-shadow .12s var(--mc-ease);
+  margin-left: 6px;
+}
+.table-action:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(2,6,23,0.08); }
+.table-action.view { color: var(--mc-accent); }
+.table-action.edit { color: #f59e0b; }
+.table-action.delete { color: var(--mc-danger); }
+
+/* actions cell alignment */
+.actions-cell { display:flex; align-items:center; justify-content:flex-end; gap:6px; }
+
+/* ---------- Form modal/card styling to match manage_course form */ 
+/* reuse .form-card above; additional spacing */
+.form-card .card-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--mc-border);
+}
+.form-card .card-body { padding: 12px 0 0 0; }
+
+/* form grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.form-grid .full { grid-column: 1 / -1; }
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--mc-border);
+  background: var(--mc-surface);
+  color: var(--mc-text);
+}
+.form-control:focus {
+  border-color: var(--mc-focus);
+  box-shadow: 0 8px 20px var(--mc-focus);
+  outline: none;
+}
+
+/* form actions */
+.form-actions {
+  display:flex;
+  justify-content:flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ---------- Pagination (same look as manage_course) ---------- */
+.pagination-wrap {
+  display:flex;
+  justify-content:center;
+  padding: 18px 0;
+}
+.pagination {
+  display:inline-flex;
+  gap:6px;
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+.page-item { display:inline-block; }
+.page-link {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:44px;
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid var(--mc-border);
+  background: var(--mc-surface);
+  color: var(--mc-text);
+  font-weight:600;
+  cursor:pointer;
+}
+.page-item.active .page-link {
+  background: linear-gradient(90deg, var(--mc-accent), var(--mc-accent-2));
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.18);
+}
+.page-item.disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .result-page { padding: 18px; }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .form-row { flex-direction: column; }
+  .form-grid { grid-template-columns: 1fr; }
+  .result-table thead { display: none; }
+  .result-table tbody td {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-bottom: 1px solid var(--mc-border);
+  }
+  .result-table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--mc-muted);
+    font-size: 13px;
+  }
+  .actions-cell { justify-content: flex-start; padding-top: 8px; }
+}
+
+/* ---------- Accessibility & polish ---------- */
+:focus { outline: none; }
+button:focus, input:focus, select:focus, textarea:focus {
+  box-shadow: 0 10px 30px var(--mc-focus);
+  border-color: var(--mc-focus);
+  outline: none;
+}
+
+/* small helpers */
+.muted { color: var(--mc-muted); font-size: 13px; }
+.text-center { text-align: center; }
+
+/* ensure table text honors theme */
+.result-table tbody td, .result-table tbody td * { color: var(--mc-text) !important; background: transparent !important; }
+
+/* end of file */

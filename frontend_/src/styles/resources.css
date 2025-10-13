@@ -1,0 +1,341 @@
+/* =======================================================
+   resources.css — Classy / Elegant Theme (updated)
+   Theme toggling: set html[data-theme="light" | "dark"]
+   Keeps glassy look in light, readable/light inputs in dark.
+   ======================================================= */
+
+/* ---------- Base variables (light defaults) ---------- */
+:root{
+  --bg: linear-gradient(180deg,#fbfdff,#f3f7ff);
+  --panel: rgba(255,255,255,0.92);
+  --panel-2: rgba(255,255,255,0.8);
+  --text: #061224;
+  --muted: #61707a;
+  --accent-grad: linear-gradient(90deg,#6fe3b3,#3bb08f);
+  --primary-grad: linear-gradient(90deg,#6c8cff,#2f6fed);
+  --glass-border: rgba(255,255,255,0.6);
+  --glass-shadow: 0 12px 40px rgba(10,18,30,0.06);
+  --card-radius: 14px;
+  --input-border: rgba(15,20,30,0.06);
+  --focus-color: rgba(79,70,229,0.18);
+  --ease: cubic-bezier(.2,.9,.2,1);
+  --max-form-width: 820px;
+  --icon-opacity: 0.92;
+  --action-shadow: 0 12px 34px rgba(47,122,239,0.12);
+  font-size: 15px;
+  --surface-contrast: rgba(0,0,0,0.04); /* used for subtle dividers in light */
+  transition: background .22s var(--ease), color .22s var(--ease);
+}
+
+/* ---------- Light theme adjustments ---------- */
+html[data-theme="light"]{
+  --bg: linear-gradient(180deg,#fbfdff,#f3f7ff);
+  --panel: rgba(255,255,255,0.92);
+  --panel-2: rgba(255,255,255,0.8);
+  --text: #061224;
+  --muted: #61707a;
+  --glass-shadow: 0 12px 40px rgba(10,18,30,0.06);
+  --input-border: rgba(15,20,30,0.06);
+  --focus-color: rgba(79,70,229,0.18);
+  --surface-contrast: rgba(0,0,0,0.04);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---------- Dark theme overrides ---------- */
+html[data-theme="dark"]{
+  --bg: linear-gradient(180deg,#07080a,#0b0d10);
+  --panel: rgba(22,22,24,0.86);
+  --panel-2: rgba(18,18,20,0.72);
+  --text: #e6eef8;
+  --muted: #9aa4ad;
+  --input-border: rgba(255,255,255,0.06);
+  --glass-shadow: 0 18px 48px rgba(0,0,0,0.7);
+  --focus-color: rgba(79,70,229,0.12);
+  --surface-contrast: rgba(255,255,255,0.03);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---------- Page base ---------- */
+.resource-page{
+  font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 32px;
+  min-height: 100vh;
+  transition: background .22s var(--ease), color .22s var(--ease);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---------- Header / Controls ---------- */
+.resource-page .d-flex { align-items:center; gap:14px; }
+.resource-page h2 { margin:0; font-size:1.75rem; font-weight:700; letter-spacing:-0.02em; color:var(--text); }
+
+/* controls grouping */
+.controls { display:flex; gap:10px; align-items:center; }
+
+/* classy search */
+.input-search {
+  display:inline-flex;
+  align-items:center;
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 6px 10px;
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--input-border);
+}
+.input-search input{
+  border: none;
+  background: transparent;
+  padding: 8px 8px;
+  width: 260px;
+  color: var(--text);
+  font-size: .98rem;
+}
+.input-search input::placeholder { color: var(--muted); opacity: .9; }
+.input-search input:focus{ outline:none; box-shadow: 0 10px 40px var(--focus-color); }
+
+/* classy add button */
+.btn-add {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  color: white;
+  font-weight:700;
+  background: linear-gradient(90deg,#2fb07f,#1b9b6a);
+  box-shadow: 0 10px 30px rgba(27,155,106,0.12);
+  cursor:pointer;
+  transition: transform .12s var(--ease), box-shadow .12s var(--ease);
+}
+.btn-add:hover{ transform: translateY(-3px); box-shadow: 0 18px 44px rgba(27,155,106,0.16); }
+
+/* ---------- Card / Form (glass style) ---------- */
+.resource-card-form{
+  width:100%;
+  max-width: var(--max-form-width);
+  margin: 22px auto;
+  border-radius: calc(var(--card-radius) + 2px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.56));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .22s var(--ease);
+}
+
+/* dark surface override */
+html[data-theme="dark"] .resource-card-form{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: var(--glass-shadow);
+}
+
+/* card inner */
+.resource-card-form .card-body{
+  padding: 28px;
+  display:block;
+  background: transparent;
+}
+
+/* form grid clean */
+.resource-form{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+  align-items:start;
+}
+.resource-form .full{ grid-column: 1 / -1; }
+
+/* labels — slightly subdued */
+.resource-form label{
+  font-weight:700;
+  color: var(--muted);
+  margin-bottom:8px;
+  display:block;
+  font-size:0.95rem;
+}
+
+/* inputs — pill-like & classy */
+.resource-form .form-control,
+.resource-form .form-select,
+.resource-form input[type="file"]{
+  height:46px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 0.98rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: box-shadow .12s var(--ease), transform .08s var(--ease), border-color .12s var(--ease), background .12s var(--ease);
+}
+
+/* textarea */
+.resource-form textarea.form-control{
+  min-height:120px;
+  padding: 12px;
+  height:auto;
+  border-radius: 12px;
+}
+
+/* focus */
+.resource-form .form-control:focus,
+.resource-form .form-select:focus{
+  outline:none;
+  box-shadow: 0 12px 50px var(--focus-color);
+  border-color: rgba(79,70,229,0.24);
+}
+
+/* helper text */
+.resource-form .form-text{ color: var(--muted); font-size:0.9rem; }
+
+/* actions row */
+.form-actions{ grid-column: 1 / -1; display:flex; justify-content:flex-end; gap:12px; margin-top:6px; }
+.btn-primary{
+  padding: 10px 16px;
+  border-radius: 12px;
+  border:none;
+  background: linear-gradient(90deg,#5f7bff,#2f6fed);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow: 0 12px 38px rgba(47,122,239,0.12);
+  transition: transform .12s var(--ease);
+}
+.btn-primary:hover{ transform: translateY(-3px); }
+.btn-ghost{
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid var(--input-border);
+  color: var(--text);
+}
+
+/* ---------- Resource List (table) ---------- */
+.resource-list{
+  margin-top:28px;
+  overflow:hidden;
+  border-radius:12px;
+  transition: background .18s var(--ease), color .18s var(--ease);
+}
+.resource-list table{ width:100%; border-collapse:collapse; background: transparent; }
+.resource-list thead th{
+  text-align:left;
+  padding:12px 14px;
+  font-weight:700;
+  color:var(--muted);
+  font-size:0.95rem;
+  border-bottom:1px solid var(--surface-contrast);
+  background: transparent;
+}
+.resource-list tbody td{
+  padding:14px;
+  border-bottom:1px solid var(--surface-contrast);
+  color:var(--text);
+  vertical-align:middle;
+  transition: background .12s var(--ease), color .12s var(--ease);
+}
+.resource-list tbody tr:hover{
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+  transform: translateY(-1px);
+}
+
+/* type badges — refined */
+.type-badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:0.78rem;
+  color:var(--text);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+/* semantic colored badges */
+.type-badge.pdf{ background: linear-gradient(90deg,#ffe3e3,#ffc9c9); color:#7b1111; }
+.type-badge.video{ background: linear-gradient(90deg,#fff6e6,#ffe7be); color:#5a3b00; }
+.type-badge.link{ background: linear-gradient(90deg,#e8f8ff,#cfeefe); color:#004b6b; }
+.type-badge.document{ background: linear-gradient(90deg,#effff3,#dff6e8); color:#0a6b3a; }
+.type-badge.presentation{ background: linear-gradient(90deg,#f6f0ff,#e8defc); color:#3b207a; }
+
+/* action buttons — circular */
+.action-btn{
+  width:40px; height:40px; display:inline-grid; place-items:center; border-radius:10px; border:none; cursor:pointer; color:#fff; font-size:14px;
+}
+.action-view{ background:linear-gradient(90deg,#17c1d0,#139bb0); box-shadow: var(--action-shadow); }
+.action-edit{ background:linear-gradient(90deg,#f6b24d,#f28b2a); color:#111; box-shadow: 0 12px 34px rgba(242,139,42,0.10); }
+.action-del{ background:linear-gradient(90deg,#ff6b7a,#ff3b51); box-shadow: 0 12px 34px rgba(255,59,81,0.12); }
+.action-dl{ background:linear-gradient(90deg,#6c8cff,#2f6fed); box-shadow: var(--action-shadow); }
+
+/* ---------- Preview modal (glass + blur) ---------- */
+.resource-preview-modal{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:2200;
+  background: rgba(2,6,23,0.56);
+  backdrop-filter: blur(6px);
+}
+.resource-preview-modal > div{
+  width:95%; max-width:980px; border-radius:18px; padding:18px; background:var(--panel); box-shadow: 0 28px 80px rgba(0,0,0,0.32);
+}
+
+/* ---------- Dark adjustments (make it classy in dark) ---------- */
+html[data-theme="dark"]{
+  --panel-2: rgba(255,255,255,0.02);
+  --glass-border: rgba(255,255,255,0.04);
+}
+
+/* show white inputs inside dark card for clarity */
+html[data-theme="dark"] .resource-form .form-control,
+html[data-theme="dark"] .resource-form .form-select{
+  background: #fff;
+  color:#111;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* label contrast */
+html[data-theme="dark"] .resource-form label{ color:#e6e6e6; }
+
+/* table dark tweaks */
+html[data-theme="dark"] .resource-list thead th { color:#cfcfcf; }
+html[data-theme="dark"] .resource-list tbody td { color:#e8eef8; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px){
+  .resource-form{ grid-template-columns: 1fr; }
+  .resource-card-form .card-body{ padding:18px; }
+  .input-search input{ width: 160px; }
+}
+@media (max-width: 560px){
+  .resource-list thead th{ display:none; }
+  .action-btn{ width:34px; height:34px; }
+}
+
+/* ---------- Accessibility focus helper ---------- */
+:focus{ outline:none; }
+button:focus, input:focus, select:focus, textarea:focus{
+  box-shadow: 0 14px 40px rgba(79,70,229,0.12);
+  border-color: rgba(79,70,229,0.28);
+}
+
+/* ---------- Subtle entrance animation ---------- */
+.resource-card-form, .resource-list tbody tr{
+  will-change: transform, opacity;
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease), opacity .22s var(--ease);
+}
+
+/* ---------- Small safety overrides (fix stray inline color/background) ---------- */
+/* ensures resources table cells always use theme text color (helps if inline styles get injected) */
+.resource-list tbody td,
+.resource-list tbody td * {
+  color: var(--text) !important;
+  background: transparent !important;
+}
+
+/* ensure placeholder & disabled items remain readable */
+.resource-list .muted, .resource-list .disabled { color: var(--muted) !important; opacity: .95; }
+
+/* end of file */
