@@ -1,7 +1,8 @@
 // Dashboard.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import "../styles/dashboard.css"; // adjust path if your CSS is elsewhere
+import { NavLink } from "react-router-dom";
+import "../styles/dashboard.css";
 
 export default function Dashboard() {
   const progressRef = useRef(null);
@@ -9,13 +10,11 @@ export default function Dashboard() {
   const progressChartRef = useRef(null);
   const questionChartRef = useRef(null);
 
-  // theme: 'light' | 'dark'
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
     return saved === "dark-mode" ? "dark" : "light";
   });
 
-  // apply theme class to body and sync navbar icons
   useEffect(() => {
     const isDark = theme === "dark";
     if (isDark) {
@@ -39,7 +38,6 @@ export default function Dashboard() {
     }
   }, [theme]);
 
-  // Sidebar toggle (FAB / hamburger)
   function toggleSidebar() {
     const sidebar = document.getElementById("sidebar");
     const main = document.getElementById("mainContent");
@@ -47,14 +45,11 @@ export default function Dashboard() {
     if (main) main.classList.toggle("active-main");
   }
 
-  // NEW: Theme toggle function used only by navbar
   function toggleThemeFromNavbar() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }
 
-  // Build / rebuild charts whenever theme changes
   useEffect(() => {
-    // destroy old charts
     if (progressChartRef.current) {
       try { progressChartRef.current.destroy(); } catch (e) {}
       progressChartRef.current = null;
@@ -64,28 +59,25 @@ export default function Dashboard() {
       questionChartRef.current = null;
     }
 
-    const isDark = theme;
+    const isDark = theme === "dark";
     const textColor = isDark ? "#ffffff" : "#000000";
     const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
     const tooltipBg = isDark ? "#111827" : "#ffffff";
 
-    // Progress bar chart
     if (progressRef.current) {
       const ctx = progressRef.current.getContext("2d");
       progressChartRef.current = new Chart(ctx, {
         type: "bar",
         data: {
           labels: ["Math", "Science", "English"],
-          datasets: [
-            {
-              label: "Progress (%)",
-              data: [80, 65, 90],
-              backgroundColor: ["#c62828", "#2e7d32", "#0288d1"],
-              borderColor: isDark ? "#ffffff" : "#000000",
-              borderWidth: 2,
-              borderRadius: 6,
-            },
-          ],
+          datasets: [{
+            label: "Progress (%)",
+            data: [80, 65, 90],
+            backgroundColor: ["#c62828", "#2e7d32", "#0288d1"],
+            borderColor: isDark ? "#ffffff" : "#000000",
+            borderWidth: 2,
+            borderRadius: 6,
+          }],
         },
         options: {
           responsive: true,
@@ -106,21 +98,18 @@ export default function Dashboard() {
       });
     }
 
-    // Question pie chart
     if (questionRef.current) {
       const ctx2 = questionRef.current.getContext("2d");
       questionChartRef.current = new Chart(ctx2, {
         type: "pie",
         data: {
           labels: ["Correct", "Wrong", "Unattempted"],
-          datasets: [
-            {
-              data: [40, 10, 5],
-              backgroundColor: ["#2ecc71", "#e74c3c", "#f1c40f"],
-              borderColor: isDark ? "#111827" : "#ffffff",
-              borderWidth: 2,
-            },
-          ],
+          datasets: [{
+            data: [40, 10, 5],
+            backgroundColor: ["#2ecc71", "#e74c3c", "#f1c40f"],
+            borderColor: isDark ? "#111827" : "#ffffff",
+            borderWidth: 2,
+          }],
         },
         options: {
           responsive: true,
@@ -147,10 +136,26 @@ export default function Dashboard() {
           <h3>Tuition Dashboard</h3>
         </div>
         <ul className="menu-list">
-          <li><a href="/dashboard"><i className="fas fa-tachometer-alt"></i> Dashboard</a></li>
-          <li><a href="/course"><i className="fas fa-book-open"></i> Courses</a></li>
-          <li><a href="/profile"><i className="fas fa-user"></i> Profile</a></li>
-          <li><a href="/result"><i className="fas fa-graduation-cap"></i> Result</a></li>
+          <li>
+            <NavLink to="/dashboard" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+              <i className="fas fa-tachometer-alt"></i> Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/course" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+              <i className="fas fa-book-open"></i> Courses
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/profile" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+              <i className="fas fa-user"></i> Profile
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/result" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+              <i className="fas fa-graduation-cap"></i> Result
+            </NavLink>
+          </li>
         </ul>
       </nav>
 
@@ -160,8 +165,12 @@ export default function Dashboard() {
           <div className="left-section">
             <h1 className="welcome-text">Welcome, Aniket</h1>
           </div>
-
-          
+          <div className="right-section">
+            <button id="themeToggle" onClick={toggleThemeFromNavbar} aria-label="Toggle theme">
+              <span id="sun-icon">☀️</span>
+              <span id="moon-icon" className="d-none">🌙</span>
+            </button>
+          </div>
         </header>
 
         <section className="overview">
@@ -197,7 +206,7 @@ export default function Dashboard() {
         </section>
       </main>
 
-      {/* FAB only toggles sidebar now */}
+      {/* FAB */}
       <div className="fab" id="fab" onClick={toggleSidebar} role="button" aria-label="Open menu">
         <i className="fas fa-bars"></i>
       </div>
