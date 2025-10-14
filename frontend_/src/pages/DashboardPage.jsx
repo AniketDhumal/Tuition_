@@ -60,7 +60,7 @@ export default function Dashboard() {
     }
 
     const isDark = theme === "dark";
-    const textColor = isDark ? "#ffffff" : "#000000";
+    const textColor = isDark ? "#6faa74ff" : "#6faa74ff";
     const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
     const tooltipBg = isDark ? "#111827" : "#ffffff";
 
@@ -165,12 +165,7 @@ export default function Dashboard() {
           <div className="left-section">
             <h1 className="welcome-text">Welcome, Aniket</h1>
           </div>
-          <div className="right-section">
-            <button id="themeToggle" onClick={toggleThemeFromNavbar} aria-label="Toggle theme">
-              <span id="sun-icon">☀️</span>
-              <span id="moon-icon" className="d-none">🌙</span>
-            </button>
-          </div>
+          
         </header>
 
         <section className="overview">
@@ -213,3 +208,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
