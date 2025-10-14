@@ -19,6 +19,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ManageCoursesPage from "./pages/ManageCoursesPage";
 import ManageResourcesPage from "./pages/ManageResourcesPage";
 import ManageResult from "./pages/ResultPage";
+import Result from "./pages/Result";
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/manage-courses" element={<ManageCoursesPage />} />
           <Route path="/manage-resources" element={<ManageResourcesPage />} />
           <Route path="/manage-results" element={<ManageResult />} />
+          <Route path="/result" element={<Result />} />
         </Routes>
       </main>
       <Footer />

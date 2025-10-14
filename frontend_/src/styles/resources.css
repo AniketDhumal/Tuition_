@@ -339,3 +339,106 @@ button:focus, input:focus, select:focus, textarea:focus{
 .resource-list .muted, .resource-list .disabled { color: var(--muted) !important; opacity: .95; }
 
 /* end of file */
+
+
+/* ------------------------------
+   Dark-mode visibility fixes
+   Append to result.css
+   ------------------------------ */
+
+/* Make table surface and borders readable in dark mode */
+body.dark-mode .table {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+/* Headers and cells - high contrast */
+body.dark-mode .table thead th {
+  color: var(--text-color);
+  font-weight: 700;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+body.dark-mode .table tbody td {
+  color: var(--text-color);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Row backgrounds and hover */
+body.dark-mode .table tbody tr {
+  background: rgba(255,255,255,0.006);
+}
+body.dark-mode .table tbody tr:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+/* Make small/secondary text visible (dates, muted cells) */
+body.dark-mode .table td .muted,
+body.dark-mode .table td small,
+body.dark-mode .table td span.muted {
+  color: rgba(255,255,255,0.7);
+}
+
+/* Inputs / selects / placeholders */
+body.dark-mode .form-control,
+body.dark-mode select.form-control,
+body.dark-mode input.form-control {
+  background: rgba(255,255,255,0.03);
+  color: var(--text-color);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+body.dark-mode .form-control::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+/* Action buttons in dark */
+body.dark-mode .btn {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+body.dark-mode .btn.btn-outline-secondary {
+  background: rgba(255,255,255,0.02);
+  color: var(--text-color);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Pagination adjustments */
+body.dark-mode .pagination .page-link {
+  background: rgba(255,255,255,0.02);
+  color: var(--text-color);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+body.dark-mode .pagination .page-item.active .page-link {
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+}
+
+/* Badges: keep color-coded but readable */
+body.dark-mode .badge {
+  background: rgba(255,255,255,0.03);
+  color: var(--text-color);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Table controls container shadow separation */
+body.dark-mode .results-page > .container,
+body.dark-mode .table-responsive {
+  /* subtle lift so the table stands out from the page background */
+  box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+}
+
+/* Chart container (if used on the page) */
+body.dark-mode .chart-container {
+  border: 1px solid rgba(255,255,255,0.04);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+}
+
+/* Accessibility focus states in dark */
+body.dark-mode button:focus,
+body.dark-mode .form-control:focus,
+body.dark-mode .page-link:focus {
+  outline: 3px solid rgba(99,102,241,0.18);
+  outline-offset: 2px;
+}

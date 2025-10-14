@@ -1,272 +1,206 @@
-// src/pages/DashboardPage.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bar, Pie } from "react-chartjs-2";
-import "chart.js/auto";
-import "../styles/dashboard.css";
+// Dashboard.jsx
+import React, { useEffect, useRef, useState } from "react";
+import Chart from "chart.js/auto";
+import "../styles/dashboard.css"; // adjust path if your CSS is elsewhere
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
-
   const progressRef = useRef(null);
   const questionRef = useRef(null);
+  const progressChartRef = useRef(null);
+  const questionChartRef = useRef(null);
 
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 992);
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  // theme: 'light' | 'dark'
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    return saved === "dark-mode" ? "dark" : "light";
+  });
 
+  // apply theme class to body and sync navbar icons
   useEffect(() => {
-    const onThemeChanged = (e) => {
-      const newTheme = e?.detail?.theme || localStorage.getItem("theme") || "light";
-      setTheme(newTheme);
-    };
-    window.addEventListener("themeChanged", onThemeChanged);
-    const stored = localStorage.getItem("theme");
-    if (stored) setTheme(stored);
-    return () => window.removeEventListener("themeChanged", onThemeChanged);
-  }, []);
+    const isDark = theme === "dark";
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light-mode");
+    }
 
-  useEffect(() => {
-    // Keep document data-theme in sync (Navbar does this too)
-    document.documentElement.setAttribute("data-theme", theme);
-    document.body.classList.toggle("dark-mode", theme === "dark");
+    const sun = document.getElementById("sun-icon");
+    const moon = document.getElementById("moon-icon");
+    if (sun && moon) {
+      if (isDark) {
+        sun.classList.add("d-none");
+        moon.classList.remove("d-none");
+      } else {
+        moon.classList.add("d-none");
+        sun.classList.remove("d-none");
+      }
+    }
   }, [theme]);
 
-  // close sidebar when clicking outside on mobile
+  // Sidebar toggle (FAB / hamburger)
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const main = document.getElementById("mainContent");
+    if (sidebar) sidebar.classList.toggle("sidebar-expanded");
+    if (main) main.classList.toggle("active-main");
+  }
+
+  // NEW: Theme toggle function used only by navbar
+  function toggleThemeFromNavbar() {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  }
+
+  // Build / rebuild charts whenever theme changes
   useEffect(() => {
-    if (!isMobile) return;
-    if (!sidebarOpen) return;
-    const onDocClick = (e) => {
-      const sidebar = document.getElementById("sidebar");
-      if (!sidebar) return;
-      if (!sidebar.contains(e.target)) setSidebarOpen(false);
+    // destroy old charts
+    if (progressChartRef.current) {
+      try { progressChartRef.current.destroy(); } catch (e) {}
+      progressChartRef.current = null;
+    }
+    if (questionChartRef.current) {
+      try { questionChartRef.current.destroy(); } catch (e) {}
+      questionChartRef.current = null;
+    }
+
+    const isDark = theme;
+    const textColor = isDark ? "#ffffff" : "#000000";
+    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
+    const tooltipBg = isDark ? "#111827" : "#ffffff";
+
+    // Progress bar chart
+    if (progressRef.current) {
+      const ctx = progressRef.current.getContext("2d");
+      progressChartRef.current = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Math", "Science", "English"],
+          datasets: [
+            {
+              label: "Progress (%)",
+              data: [80, 65, 90],
+              backgroundColor: ["#c62828", "#2e7d32", "#0288d1"],
+              borderColor: isDark ? "#ffffff" : "#000000",
+              borderWidth: 2,
+              borderRadius: 6,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { color: textColor } },
+            tooltip: {
+              backgroundColor: tooltipBg,
+              titleColor: textColor,
+              bodyColor: textColor,
+            },
+          },
+          scales: {
+            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor }, grid: { color: gridColor }, beginAtZero: true, suggestedMax: 100 },
+          },
+        },
+      });
+    }
+
+    // Question pie chart
+    if (questionRef.current) {
+      const ctx2 = questionRef.current.getContext("2d");
+      questionChartRef.current = new Chart(ctx2, {
+        type: "pie",
+        data: {
+          labels: ["Correct", "Wrong", "Unattempted"],
+          datasets: [
+            {
+              data: [40, 10, 5],
+              backgroundColor: ["#2ecc71", "#e74c3c", "#f1c40f"],
+              borderColor: isDark ? "#111827" : "#ffffff",
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom", labels: { color: textColor } },
+            tooltip: { backgroundColor: tooltipBg, titleColor: textColor, bodyColor: textColor },
+          },
+        },
+      });
+    }
+
+    return () => {
+      if (progressChartRef.current) progressChartRef.current.destroy();
+      if (questionChartRef.current) questionChartRef.current.destroy();
     };
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, [isMobile, sidebarOpen]);
-
-  const courses = useMemo(
-    () => [
-      { id: "math", title: "Math", progress: 80, color: "#db7979" },
-      { id: "science", title: "Science", progress: 65, color: "#7dce81" },
-      { id: "english", title: "English", progress: 90, color: "#84b4cb" },
-    ],
-    []
-  );
-
-  const assignments = useMemo(
-    () => [
-      { id: 1, text: "Math Test - Sep 20, 2024" },
-      { id: 2, text: "Science Project - Sep 22, 2024" },
-      { id: 3, text: "English Essay - Sep 25, 2024" },
-    ],
-    []
-  );
-
-  const labelColor = theme === "dark" ? "#e6e6e6" : "#111827";
-  const baseChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { labels: { color: labelColor, font: { weight: "600" } } },
-      tooltip: { backgroundColor: theme === "dark" ? "#222" : "#333", titleColor: "#fff", bodyColor: "#fff" },
-    },
-    scales: {
-      y: { ticks: { color: labelColor }, grid: { display: false } },
-      x: { ticks: { color: labelColor }, grid: { display: false } },
-    },
-  };
-
-  const progressData = {
-    labels: courses.map((c) => c.title),
-    datasets: [
-      {
-        label: "Progress (%)",
-        data: courses.map((c) => c.progress),
-        backgroundColor: courses.map((c) => c.color),
-        borderColor: "rgba(255,255,255,0.06)",
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const questionData = {
-    labels: ["Correct", "Wrong", "Unattempted"],
-    datasets: [
-      {
-        label: "Question Analysis",
-        data: [40, 10, 5],
-        backgroundColor: ["#4caf50", "#f44336", "#ff9800"],
-        borderColor: "rgba(255,255,255,0.06)",
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const navItems = [
-    { to: "/dashboard", label: "Dashboard", icon: "fas fa-tachometer-alt" },
-    { to: "/courses", label: "Courses", icon: "fas fa-book-open" },
-    { to: "/profile", label: "Profile", icon: "fas fa-user" },
-    { to: "/results", label: "Results", icon: "fas fa-graduation-cap" },
-  ];
-
-  const toggleSidebar = () => setSidebarOpen((s) => !s);
+  }, [theme]);
 
   return (
-    <div className={`dashboard-root ${sidebarOpen ? "sidebar-open" : "sidebar-closed"} theme-${theme}`}>
-      {/* BACKDROP on mobile when sidebar is open */}
-      {isMobile && sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-hidden="true" />}
-
-      <aside
-        id="sidebar"
-        className={`sidebar ${sidebarOpen ? "open" : "closed"} ${isMobile ? "mobile" : "desktop"}`}
-        aria-hidden={!sidebarOpen && isMobile}
-        aria-label="Main navigation"
-      >
+    <div className="container-fluid">
+      {/* Sidebar */}
+      <nav className="sidebar" id="sidebar" aria-hidden="false">
         <div className="sidebar-header">
-          <div className="brand">
-            <strong>Bright</strong> Learning
-          </div>
-          <button
-            className="collapse-btn"
-            onClick={toggleSidebar}
-            aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            title={sidebarOpen ? "Collapse" : "Expand"}
-          >
-            <i className="fas fa-chevron-left" />
-          </button>
+          <h3>Tuition Dashboard</h3>
         </div>
+        <ul className="menu-list">
+          <li><a href="/dashboard"><i className="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="/course"><i className="fas fa-book-open"></i> Courses</a></li>
+          <li><a href="/profile"><i className="fas fa-user"></i> Profile</a></li>
+          <li><a href="/result"><i className="fas fa-graduation-cap"></i> Result</a></li>
+        </ul>
+      </nav>
 
-        <nav className="sidebar-nav" role="navigation" aria-label="Sidebar">
-          <ul className="menu-list">
-            {navItems.map((item) => (
-              <li key={item.to} className={location.pathname === item.to ? "active" : ""}>
-                <Link to={item.to} onClick={() => isMobile && setSidebarOpen(false)}>
-                  <i className={item.icon} aria-hidden="true" />
-                  <span className="menu-label">{item.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="sidebar-footer">
-          <small>© {new Date().getFullYear()} Bright</small>
-        </div>
-      </aside>
-
-      <main className="main-content" id="mainContent" tabIndex={-1}>
-        <header className="dashboard-header">
-          <div className="left-controls">
-            <button
-              className="icon-btn"
-              onClick={toggleSidebar}
-              aria-expanded={sidebarOpen}
-              aria-controls="sidebar"
-              title="Toggle sidebar"
-            >
-              <i className="fas fa-bars" />
-            </button>
-            <h1 className="page-title">Welcome, Aniket</h1>
+      {/* Main content */}
+      <main className="main-content" id="mainContent">
+        <header>
+          <div className="left-section">
+            <h1 className="welcome-text">Welcome, Aniket</h1>
           </div>
 
-          <div className="header-actions">
-            <button
-              className="btn-ghost"
-              onClick={() => {
-                const newTheme = theme === "dark" ? "light" : "dark";
-                setTheme(newTheme);
-                document.documentElement.setAttribute("data-theme", newTheme);
-                document.body.classList.toggle("dark-mode", newTheme === "dark");
-                localStorage.setItem("theme", newTheme);
-                window.dispatchEvent(new CustomEvent("themeChanged", { detail: { theme: newTheme } }));
-              }}
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-            </button>
-
-            <button
-              className="btn-ghost"
-              onClick={() => {
-                // quick logout example — replace with real logic if you have it
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                navigate("/login");
-              }}
-            >
-              Logout
-            </button>
-          </div>
+          
         </header>
 
         <section className="overview">
           <h2>Course Overview</h2>
-          <div className="card-grid">
-            {courses.map((c) => (
-              <div key={c.id} className="card overview-card">
-                <div className="card-head">
-                  <h3>{c.title}</h3>
-                </div>
-                <div className="card-body">
-                  <div className="progress-row">
-                    <div className="progress-bar-outer" aria-hidden>
-                      <div className="progress-bar-inner" style={{ width: `${c.progress}%`, background: c.color }} />
-                    </div>
-                    <div className="progress-value">{c.progress}%</div>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="row">
+            <div className="col-md-4"><div className="card" id="math"><h3>Math</h3><p>Progress: 80%</p></div></div>
+            <div className="col-md-4"><div className="card" id="Science"><h3>Science</h3><p>Progress: 65%</p></div></div>
+            <div className="col-md-4"><div className="card" id="English"><h3>English</h3><p>Progress: 90%</p></div></div>
           </div>
-        </section>
-
-        <section className="upcoming-assignments">
-          <h2>Upcoming Assignments</h2>
-          <ul>
-            {assignments.map((a) => (
-              <li key={a.id} className="assignment">
-                {a.text}
-              </li>
-            ))}
-          </ul>
         </section>
 
         <section className="performance-chart">
           <h2>Performance Overview</h2>
-          <div className="chart-container">
-            <div style={{ height: 360 }}>
-              <Bar ref={progressRef} data={progressData} options={baseChartOptions} />
-            </div>
+          <div className="chart-container" style={{ height: 420 }}>
+            <canvas id="progressChart" ref={progressRef}></canvas>
           </div>
         </section>
 
-        <section className="question-analysis">
+        <section className="question-analysis" style={{ marginTop: 24 }}>
           <h2>Question Analysis</h2>
-          <div className="chart-container">
-            <div style={{ height: 360 }}>
-              <Pie ref={questionRef} data={questionData} options={baseChartOptions} />
-            </div>
+          <div className="chart-container" style={{ height: 300 }}>
+            <canvas id="questionChart" ref={questionRef}></canvas>
           </div>
+        </section>
+
+        <section className="upcoming-assignments" style={{ marginTop: 24 }}>
+          <h2>Upcoming Assignments</h2>
+          <ul>
+            <li>Math Test - Sep 20, 2024</li>
+            <li>Science Project - Sep 22, 2024</li>
+            <li>English Essay - Sep 25, 2024</li>
+          </ul>
         </section>
       </main>
 
-      <button
-        className="fab-toggle"
-        aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-        onClick={toggleSidebar}
-        title="Toggle sidebar"
-      >
-        <i className="fas fa-bars" />
-      </button>
+      {/* FAB only toggles sidebar now */}
+      <div className="fab" id="fab" onClick={toggleSidebar} role="button" aria-label="Open menu">
+        <i className="fas fa-bars"></i>
+      </div>
     </div>
   );
 }

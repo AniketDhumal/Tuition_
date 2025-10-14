@@ -139,11 +139,7 @@ export default function Admin() {
               <i className="fas fa-graduation-cap" /> Manage Results
             </Link>
           </li>
-          <li>
-            <Link to="/logout">
-              <i className="fas fa-sign-out-alt" /> Logout
-            </Link>
-          </li>
+          
         </ul>
       </nav>
 
