@@ -33,7 +33,6 @@ const adminRoutes = require('./routes/adminRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const resultRoutes = require('./routes/resultRoutes');
 
-
 const app = express();
 
 // Create uploads directory if it doesn't exist
@@ -51,38 +50,41 @@ if (!fs.existsSync(resourceUploadDir)) {
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(uploadDir));
 
-// Configure CORS
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://tuition-1-xx17.onrender.com',`https://tuition-c67n.onrender.com`];
+/* ============================
+   CORS CONFIGURATION
+============================ */
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://tuition-1-xx17.onrender.com',
+  'https://tuition-c67n.onrender.com'
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.some(allowedOrigin => {
-      return origin === allowedOrigin || origin.startsWith(allowedOrigin);
-    })) {
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Authorization'],
   optionsSuccessStatus: 200
 };
 
-// Enable CORS
 app.use(cors(corsOptions));
-
-// Handle preflight requests
 app.options('*', cors(corsOptions));
 
-// Body parser with increased limit for file uploads
+/* ============================
+   BODY PARSER
+============================ */
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -95,38 +97,57 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Sanitize data against NoSQL injection
-app.use(mongoSanitize({
-  replaceWith: '_'
-}));
+app.use(
+  mongoSanitize({
+    replaceWith: '_'
+  })
+);
 
-// Set security headers
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'fonts.googleapis.com'],
-      imgSrc: ["'self'", 'data:', 'blob:', 'cdn.jsdelivr.net'],
-      fontSrc: ["'self'", 'fonts.gstatic.com'],
-      connectSrc: ["'self'"],
-      objectSrc: ["'none'"]
-    }
-  },
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+/* ============================
+   HELMET SECURITY HEADERS
+============================ */
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          'cdn.jsdelivr.net',
+          'fonts.googleapis.com'
+        ],
+        imgSrc: ["'self'", 'data:', 'blob:', 'cdn.jsdelivr.net'],
+        fontSrc: ["'self'", 'fonts.gstatic.com'],
+        connectSrc: [
+          "'self'",
+          'https://tuition-1-xx17.onrender.com',
+          'https://tuition-c67n.onrender.com'
+        ],
+        objectSrc: ["'none'"]
+      }
+    },
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+  })
+);
 
 // Prevent XSS attacks
 app.use(xss());
 
-// Rate limiting - more granular configuration
+/* ============================
+   RATE LIMITING
+============================ */
+
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: 'Too many requests from this IP, please try again after 15 minutes'
 });
 
 const authLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 1000,
   max: 20,
   message: 'Too many login attempts from this IP, please try again after an hour'
 });
@@ -141,7 +162,10 @@ app.use(hpp());
 // Response compression
 app.use(compression());
 
-// Request logging middleware
+/* ============================
+   REQUEST LOGGING
+============================ */
+
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     console.log(`${req.method} ${req.originalUrl}`);
@@ -149,7 +173,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint
+/* ============================
+   HEALTH CHECK
+============================ */
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -159,7 +186,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount routers with versioning
+/* ============================
+   ROUTES
+============================ */
+
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/courses', courses);
@@ -170,65 +200,83 @@ app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/results', resultRoutes);
 
-// Test endpoint for file serving
+/* ============================
+   TEST ENDPOINT
+============================ */
+
 app.get('/test-avatar', (req, res) => {
   try {
     const avatarPath = path.join(__dirname, 'public/uploads/default-avatar.png');
-    
+
     if (!fs.existsSync(avatarPath)) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
         error: 'File not found',
-        path: avatarPath 
+        path: avatarPath
       });
     }
-    
+
     res.sendFile(avatarPath);
   } catch (err) {
     console.error('Test avatar error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      error: 'Server error' 
+      error: 'Server error'
     });
   }
 });
 
-// Swagger documentation setup
+/* ============================
+   SWAGGER DOCS
+============================ */
+
 if (process.env.NODE_ENV !== 'production') {
   swaggerDocs(app, parseInt(process.env.PORT || 5000));
 }
 
-// 404 handler
-app.use((req, res, next) => {
+/* ============================
+   404 HANDLER
+============================ */
+
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: 'Endpoint not found'
   });
 });
 
-// Error handler middleware
+/* ============================
+   ERROR HANDLER
+============================ */
+
 app.use(errorHandler);
+
+/* ============================
+   SERVER START
+============================ */
 
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(
   PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold)
+  console.log(
+    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+  )
 );
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
+/* ============================
+   ERROR HANDLING
+============================ */
+
+process.on('unhandledRejection', (err) => {
   console.log(`Error: ${err.message}`.red);
   server.close(() => process.exit(1));
 });
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM RECEIVED. Shutting down gracefully');
+
   server.close(() => {
     console.log('Process terminated');
   });
-
 });
-
-
